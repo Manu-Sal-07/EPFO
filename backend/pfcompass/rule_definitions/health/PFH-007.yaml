@@ -1,0 +1,17 @@
+id: PFH-007
+version: "1.0.0"
+domain: HEALTH
+title: "KYC Verification Mismatch"
+description: "Citizen UAN profile lacks verified KYC (Aadhaar/PAN/Bank) or has an unverified status."
+severity: HIGH
+source_reference: "EPFO Circular No. KYC/Aadhaar/Mandatory/2021 dated 2021-06-01"
+effective_from: "2021-06-01"
+parameters:
+  require_verified_kyc: true
+impact_category: ADMINISTRATIVE
+requires_employer_action: true
+correction_steps:
+  - "Log in to EPFO Unified Member Portal."
+  - "Go to 'Manage' -> 'KYC' and upload your Aadhaar and Bank Account details."
+  - "Inform your employer to approve the pending KYC request using their digital signature."
+estimated_correction_days: 10

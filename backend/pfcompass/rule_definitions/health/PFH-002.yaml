@@ -1,0 +1,17 @@
+id: PFH-002
+version: "1.0.0"
+domain: HEALTH
+title: "Missing Date of Exit"
+description: "Employer did not enter date of exit in the EPFO ECR Portal after resignation, leaving the account in an ambiguous state."
+severity: HIGH
+source_reference: "EPFO Circular No. WSU/10(1)2019/3314 dated 2020-01-22"
+effective_from: "2020-01-22"
+parameters:
+  require_exit_date: true
+impact_category: ELIGIBILITY
+requires_employer_action: false
+correction_steps:
+  - "Log in to EPFO Member Unified Portal."
+  - "Navigate to 'Manage' -> 'Mark Exit' and enter your date of exit based on your relieving letter."
+  - "Alternatively, request your former employer to update the date of exit on ECR Portal."
+estimated_correction_days: 7

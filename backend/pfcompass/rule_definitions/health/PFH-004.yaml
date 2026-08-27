@@ -1,0 +1,17 @@
+id: PFH-004
+version: "1.0.0"
+domain: HEALTH
+title: "UAN Multiplicity"
+description: "Citizen has multiple UAN numbers assigned across different employments, causing service fragmentation."
+severity: CRITICAL
+source_reference: "EPFO Circular No. R-I/UAN/Consolidation/2017 dated 2017-05-18"
+effective_from: "2017-05-18"
+parameters:
+  max_allowed_uans: 1
+impact_category: COMPLIANCE
+requires_employer_action: false
+correction_steps:
+  - "Identify your primary active UAN."
+  - "Submit an online UAN merger request on the EPFO Unified Portal."
+  - "Transfer all member IDs from secondary UANs to the primary UAN using Form 13."
+estimated_correction_days: 30

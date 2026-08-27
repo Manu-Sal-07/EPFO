@@ -1,0 +1,17 @@
+id: PFH-001
+version: "1.0.0"
+domain: HEALTH
+title: "Inoperative PF Account"
+description: "A PF account becomes inoperative if no contributions have been received for over 36 consecutive months after exit from employment."
+severity: HIGH
+source_reference: "EPF Scheme 1952, Paragraph 72(6); EPFO Circular dated 2016-09-01"
+effective_from: "2016-09-01"
+parameters:
+  inoperative_threshold_months: 36
+impact_category: FINANCIAL
+requires_employer_action: false
+correction_steps:
+  - "Log in to the EPFO Unified Member Portal."
+  - "Initiate an online Form 13 transfer request to consolidate your balance into your current active UAN account."
+  - "Alternatively, submit Form 19 for online withdrawal if eligible."
+estimated_correction_days: 15

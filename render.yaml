@@ -1,0 +1,72 @@
+# ==============================================================================
+# Render Blueprint — PF Compass Backend
+# ==============================================================================
+# This file configures Render deployment via Infrastructure as Code.
+# Docs: https://render.com/docs/blueprint-spec
+#
+# To deploy:
+#   1. Push this file to your GitHub repository
+#   2. Connect the repo to Render
+#   3. Render will detect render.yaml and provision all services
+#   4. Set sensitive env vars (SECRET_KEY, GROQ_API_KEY) manually in Render
+#      dashboard — do NOT put them in this file
+# ==============================================================================
+
+services:
+
+  # ─── Backend API ─────────────────────────────────────────────────────────
+  - type: web
+    name: pfcompass-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    # Render injects PORT; uvicorn must bind to 0.0.0.0:$PORT
+    healthCheckPath: /api/v1/system/health
+
+    envVars:
+      # Provided automatically by Render from managed services below
+      - key: DATABASE_URL
+        fromDatabase:
+          name: pfcompass-db
+          property: connectionString
+
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: pfcompass-redis
+          property: connectionString
+
+      # --- Set these manually in the Render dashboard ---
+      # SECRET_KEY        → long random hex string
+      # GROQ_API_KEY      → your Groq API key
+      # GROQ_MODEL        → llama-3.3-70b-versatile (or other)
+      # LLM_PROVIDER      → groq
+      # ENVIRONMENT       → production
+      # LOG_LEVEL         → INFO
+      # SEED_DEMO         → false (production; seed manually if needed)
+
+      # CORS: set to your actual frontend domain after deployment
+      - key: CORS_ORIGINS
+        value: "https://pfcompass.onrender.com"
+
+      - key: ENVIRONMENT
+        value: production
+
+      - key: LOG_LEVEL
+        value: INFO
+
+    autoDeploy: true
+
+  # ─── Managed PostgreSQL ───────────────────────────────────────────────────
+databases:
+  - name: pfcompass-db
+    databaseName: pfcompass
+    user: pfcompass
+    plan: free
+    # pgvector is available on Render's PostgreSQL 16 instances
+
+  # ─── Managed Redis ────────────────────────────────────────────────────────
+  - type: redis
+    name: pfcompass-redis
+    plan: free
+    ipAllowList: []     # allow all internal connections
