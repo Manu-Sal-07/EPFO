@@ -1,8 +1,21 @@
 {
-  "rewrites": [
+  "buildCommand": "",
+  "installCommand": "pip install -r requirements.txt",
+  "env": {
+    "PYTHONUNBUFFERED": "1",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "functions": {
+    "api/index.py": {
+      "runtime": "python3.12",
+      "memory": 1024,
+      "maxDuration": 60
+    }
+  },
+  "routes": [
     {
-      "source": "/(.*)",
-      "destination": "/api/index.py"
+      "src": "/(.*)",
+      "dest": "/api/index.py"
     }
   ]
 }
