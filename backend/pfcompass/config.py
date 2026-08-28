@@ -32,14 +32,52 @@ class Settings(BaseSettings):
 
     @property
     def cors_origins_list(self) -> list[str]:
-        origins = [origin.strip() for origin in self.CORS_ORIGINS.split(",") if origin.strip()]
+        raw = self.CORS_ORIGINS.strip()
+        origins: list[str] = []
+
+        if raw.startswith("[") and raw.endswith("]"):
+            import json
+            try:
+                parsed = json.loads(raw)
+                items = [str(item) for item in parsed] if isinstance(parsed, list) else [raw]
+            except Exception:
+                items = raw.split(",")
+        else:
+            items = raw.split(",")
+
+        for item in items:
+            cleaned = item.strip().strip("'\"")
+            if not cleaned:
+                continue
+            if cleaned == "*":
+                if "*" not in origins:
+                    origins.append("*")
+                continue
+            base_url = cleaned.rstrip("/")
+            if base_url and base_url not in origins:
+                origins.append(base_url)
+            with_slash = f"{base_url}/"
+            if with_slash not in origins:
+                origins.append(with_slash)
+
         for env_var in ("VERCEL_URL", "VERCEL_PROJECT_PRODUCTION_URL"):
             val = os.getenv(env_var)
             if val:
                 url = val if val.startswith("http") else f"https://{val}"
-                if url not in origins:
-                    origins.append(url)
+                base_url = url.rstrip("/")
+                if base_url not in origins:
+                    origins.append(base_url)
+                with_slash = f"{base_url}/"
+                if with_slash not in origins:
+                    origins.append(with_slash)
+
+        prod_frontend = "https://epfo-tan.vercel.app"
+        if prod_frontend not in origins:
+            origins.append(prod_frontend)
+            origins.append(f"{prod_frontend}/")
+
         return origins
+
 
 
 settings = Settings()
