@@ -1,6 +1,8 @@
 from contextlib import asynccontextmanager
 import structlog
-from fastapi import FastAPI, HTTPException, Request, status
+from fastapi import Depends, FastAPI, HTTPException, Request, status
+from sqlalchemy.ext.asyncio import AsyncSession
+from pfcompass.database import Base, engine, get_db_session
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -10,8 +12,8 @@ from pfcompass.api.middleware.rate_limiter import RateLimiterMiddleware
 from pfcompass.api.middleware.security_middleware import SecurityHeadersMiddleware
 from pfcompass.api.v1 import auth, cases, decision, health, knowledge, system
 from pfcompass.config import settings
-from pfcompass.database import Base, engine
 from pfcompass.seed_demo_data import seed_demo_citizens
+
 
 
 logger = structlog.get_logger()
@@ -139,3 +141,10 @@ async def root_redirect() -> dict[str, str]:
         "docs": "/docs",
         "health": "/api/v1/system/health",
     }
+
+
+@app.get("/health")
+async def direct_health(session: AsyncSession = Depends(get_db_session)):
+    return await system.health_check(session=session)
+
+
