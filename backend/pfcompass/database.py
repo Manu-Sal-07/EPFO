@@ -38,7 +38,8 @@ else:
         db_url,
         echo=(settings.LOG_LEVEL.upper() == "DEBUG"),
         future=True,
-        pool_pre_ping=True
+        pool_pre_ping=True,
+        connect_args={"ssl": "require"},
     )
 
 AsyncSessionLocal = async_sessionmaker(
