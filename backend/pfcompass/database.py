@@ -14,14 +14,19 @@ if db_url.startswith("postgres://"):
 elif db_url.startswith("postgresql://"):
     db_url = db_url.replace("postgresql://", "postgresql+asyncpg://", 1)
 
+is_vercel = "VERCEL" in os.environ
 use_local_sqlite = os.environ.get("USE_LOCAL_SQLITE")
+
 if use_local_sqlite is not None:
     should_use_sqlite = use_local_sqlite.lower() == "true"
+elif is_vercel:
+    should_use_sqlite = "sqlite" in db_url
 else:
     should_use_sqlite = "sqlite" in db_url or settings.ENVIRONMENT == "development"
 
 if should_use_sqlite:
-    db_url = "sqlite+aiosqlite:///./pfcompass.db"
+    sqlite_file = "/tmp/pfcompass.db" if is_vercel else "./pfcompass.db"
+    db_url = f"sqlite+aiosqlite:///{sqlite_file}"
     engine = create_async_engine(
         db_url,
         echo=(settings.LOG_LEVEL.upper() == "DEBUG"),

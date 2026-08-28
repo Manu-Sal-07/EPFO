@@ -11,7 +11,8 @@ from pfcompass.api.middleware.security_middleware import SecurityHeadersMiddlewa
 from pfcompass.api.v1 import auth, cases, decision, health, knowledge, system
 from pfcompass.config import settings
 from pfcompass.database import Base, engine
-from scripts.seed_demo_data import seed_demo_citizens
+from pfcompass.seed_demo_data import seed_demo_citizens
+
 
 logger = structlog.get_logger()
 
