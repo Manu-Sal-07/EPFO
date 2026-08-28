@@ -32,7 +32,14 @@ class Settings(BaseSettings):
 
     @property
     def cors_origins_list(self) -> list[str]:
-        return [origin.strip() for origin in self.CORS_ORIGINS.split(",") if origin.strip()]
+        origins = [origin.strip() for origin in self.CORS_ORIGINS.split(",") if origin.strip()]
+        for env_var in ("VERCEL_URL", "VERCEL_PROJECT_PRODUCTION_URL"):
+            val = os.getenv(env_var)
+            if val:
+                url = val if val.startswith("http") else f"https://{val}"
+                if url not in origins:
+                    origins.append(url)
+        return origins
 
 
 settings = Settings()

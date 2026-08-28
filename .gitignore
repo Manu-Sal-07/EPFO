@@ -38,6 +38,8 @@ out/
 frontend/.next/
 frontend/out/
 frontend/node_modules/
+*.tsbuildinfo
+
 
 # Docker
 *.override.yml

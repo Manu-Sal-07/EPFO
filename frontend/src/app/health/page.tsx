@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import { HealthScoreCard } from '@/components/health/HealthScoreCard';
 import { FindingCard, HealthFindingData } from '@/components/health/FindingCard';
+import { API_BASE } from '@/lib/api';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 interface HealthReport {
   citizen_id: string;

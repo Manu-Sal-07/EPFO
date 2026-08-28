@@ -6,7 +6,7 @@ import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import { NextActionCard, NextActionSet } from '@/components/cases/NextActionCard';
 import { TimelineItem, TimelineView } from '@/components/cases/TimelineView';
-import { explainCaseNarrative, CaseNarrative } from '@/lib/api';
+import { explainCaseNarrative, CaseNarrative, API_BASE } from '@/lib/api';
 
 export interface CaseDetail {
   id: string;
@@ -49,7 +49,7 @@ export default function CaseDetailPage() {
   const fetchDetail = async () => {
     try {
       const token = localStorage.getItem('pf_token') || localStorage.getItem('token');
-      const res = await fetch(`http://localhost:8000/api/v1/cases/${caseId}`, {
+      const res = await fetch(`${API_BASE}/api/v1/cases/${caseId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error(`Failed to fetch case detail: ${res.statusText}`);
@@ -86,7 +86,7 @@ export default function CaseDetailPage() {
     setError(null);
     try {
       const token = localStorage.getItem('pf_token') || localStorage.getItem('token');
-      const res = await fetch(`http://localhost:8000/api/v1/cases/${caseId}/simulate`, {
+      const res = await fetch(`${API_BASE}/api/v1/cases/${caseId}/simulate`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -109,7 +109,7 @@ export default function CaseDetailPage() {
     setSubmittingNote(true);
     try {
       const token = localStorage.getItem('pf_token') || localStorage.getItem('token');
-      const res = await fetch(`http://localhost:8000/api/v1/cases/${caseId}/events`, {
+      const res = await fetch(`${API_BASE}/api/v1/cases/${caseId}/events`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

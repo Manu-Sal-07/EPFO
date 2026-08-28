@@ -36,17 +36,19 @@ def test_standardized_error_envelope_422_validation():
 
 
 def test_rate_limiter_rate_limit_exceeded():
-    # Attempt rate limit hit on auth route (limit 10/min)
-    path = "/api/v1/auth/login"
-    payload = {"email": "rate_limit_test@demo.com", "password": "wrongpassword"}
-    
-    # First 10 requests should process (401 invalid creds)
-    for _ in range(10):
-        client.post(path, json=payload)
+    with TestClient(app) as client:
+        # Attempt rate limit hit on auth route (limit 10/min)
+        path = "/api/v1/auth/login"
+        payload = {"email": "rate_limit_test@demo.com", "password": "wrongpassword"}
+        
+        # First 10 requests should process (401 invalid creds)
+        for _ in range(10):
+            client.post(path, json=payload)
 
-    # 11th request should trigger HTTP 429
-    res_429 = client.post(path, json=payload)
-    assert res_429.status_code == 429
-    data = res_429.json()
-    assert data["error"]["code"] == "RATE_LIMIT_EXCEEDED"
-    assert "retry_after_seconds" in data["error"]["details"]
+        # 11th request should trigger HTTP 429
+        res_429 = client.post(path, json=payload)
+        assert res_429.status_code == 429
+        data = res_429.json()
+        assert data["error"]["code"] == "RATE_LIMIT_EXCEEDED"
+        assert "retry_after_seconds" in data["error"]["details"]
+

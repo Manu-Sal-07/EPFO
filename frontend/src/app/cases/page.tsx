@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import { CaseCard, CaseSummary } from '@/components/cases/CaseCard';
+import { API_BASE } from '@/lib/api';
 
 export default function CasesPage() {
   const router = useRouter();
@@ -33,7 +34,7 @@ export default function CasesPage() {
     if (!token) return;
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:8000/api/v1/cases', {
+      const res = await fetch(`${API_BASE}/api/v1/cases`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error(`Failed to fetch cases: ${res.statusText}`);
@@ -55,7 +56,7 @@ export default function CasesPage() {
     if (!token) return;
     setSubmittingCase(true);
     try {
-      const res = await fetch('http://localhost:8000/api/v1/cases', {
+      const res = await fetch(`${API_BASE}/api/v1/cases`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

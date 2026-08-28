@@ -14,8 +14,13 @@ if db_url.startswith("postgres://"):
 elif db_url.startswith("postgresql://"):
     db_url = db_url.replace("postgresql://", "postgresql+asyncpg://", 1)
 
-# Default to SQLite for local development if DATABASE_URL is not set to postgresql or if postgresql is offline
-if "sqlite" in db_url or os.environ.get("USE_LOCAL_SQLITE", "true").lower() == "true":
+use_local_sqlite = os.environ.get("USE_LOCAL_SQLITE")
+if use_local_sqlite is not None:
+    should_use_sqlite = use_local_sqlite.lower() == "true"
+else:
+    should_use_sqlite = "sqlite" in db_url or settings.ENVIRONMENT == "development"
+
+if should_use_sqlite:
     db_url = "sqlite+aiosqlite:///./pfcompass.db"
     engine = create_async_engine(
         db_url,
